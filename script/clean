@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC1091
+
+set -euo pipefail
+cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
+. 'script/utils.sh'
+. 'script/import_python.sh'
+
+paths=(
+    "${PWD}/build/"
+    "${PWD}/temp/"
+    "${PWD}/dist/"
+    "${PWD}/.pytest_cache/"
+)
+
+for path in "${paths[@]}"; do
+    run rm -rf "$path"
+done
+
+run pipenv --rm
+
+find . -type d -name '__pycache__' -exec rm -rf {} +
+find . -type d -name '*.egg-info' -exec rm -rf {} +

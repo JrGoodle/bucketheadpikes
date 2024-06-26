@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC1091
+# shellcheck disable=SC2016
+
+set -euo pipefail
+cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
+. 'script/utils.sh'
+
+run "${PWD}/script/bootstrap"
+
+. script/import.sh
+. script/import_python.sh
+
+run script/update_python.sh
