@@ -8,15 +8,15 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
-            $("#collapseBtn").click(function () {
-                $("div").toggle();
+            $(".collapse-btn").click(function () {
+                $(this).siblings(".content").toggle();
             });
         });
     </script>
     <style>
         /* Optional: Style for the button */
-        #collapseBtn {
-            padding: 10px;
+        .collapse-btn {
+            padding: 5px 10px;
             background-color: #4CAF50;
             color: white;
             border: none;
@@ -29,12 +29,12 @@
     <h1>Buckethead Pikes Content</h1>
 
     <h2>Text Content</h2>
-    <button id="collapseBtn">Collapse/Expand All</button> <!-- Button to collapse/expand all divs -->
+    {% for item in texts %}
     <div>
-        {% for text in texts %}
-        <div>{{ text|safe }}</div>
-        {% endfor %}
+        <button class="collapse-btn">Disclosure Button {{ item.index }}</button>
+        <div class="content">{{ item.content|safe }}</div>
     </div>
+    {% endfor %}
 </body>
 
 </html>
