@@ -15,11 +15,20 @@ def parse_html(html_content):
                 if child == '\xa0':
                     continue
         ps_filtered.append(p)
+
+    for para in ps_filtered:
+        # Find all <img> tags within the <p> tag
+        images = para.find_all('img')
+        for img in images:
+            # Update the src attribute to point to static/images directory
+            img['src'] = f"/static/{img['src']}"
+
     # Extract relevant information. For example, let's get all the links:
     # links = soup.find_all('a')
     # parsed_data = [{'text': link.get_text(), 'href': link.get('href')} for link in links]
     # return parsed_data
-    return ps_filtered
+    text_content = [str(para) for para in ps_filtered]
+    return text_content
 
 
 def extract_images(html_content):

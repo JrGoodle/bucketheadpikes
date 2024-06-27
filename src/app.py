@@ -9,7 +9,8 @@ def home():
     with open("page.html", "r", encoding="utf-8") as file:
         html_content = file.read()
     parsed_data = parse_html.parse_html(html_content)
-    return render_template('index.html', links=parsed_data)
+    rendered_template = render_template('index.html', texts=parsed_data)
+    return rendered_template
 
 
 if __name__ == "__main__":

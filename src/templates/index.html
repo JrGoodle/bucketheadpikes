@@ -4,16 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parsed Buckethead Pikes</title>
+    <title>Buckethead Pikes Content</title>
 </head>
 
 <body>
-    <h1>Parsed Links from Buckethead Pikes</h1>
-    <ul>
-        {% for link in links %}
-        <li><a href="{{ link.href }}">{{ link.text }}</a></li>
+    <h1>Buckethead Pikes Content</h1>
+
+    <h2>Text Content</h2>
+    <div>
+        {% for text in texts %}
+        <div>{{ text|safe }}</div>
         {% endfor %}
-    </ul>
+    </div>
 </body>
 
 </html>

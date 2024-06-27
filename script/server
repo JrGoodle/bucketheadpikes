@@ -8,5 +8,4 @@ cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
 
 pushd src
 
-pipenv run python fetch_html.py
-pipenv run python download_images.py
+pipenv run python app.py
