@@ -1,20 +1,32 @@
+import bs4
 from bs4 import BeautifulSoup, NavigableString
 
 def parse_html(html_content):
     soup = BeautifulSoup(html_content, 'html.parser')
     ps = soup.find_all('p')
     ps_filtered = []
+    was_separator = False
+    current_div = soup.new_tag('div')
     for p in ps:
         children = list(p.children)
         num_children = len(children)
         if num_children == 0:
+            if not was_separator:
+                ps_filtered.append(current_div)
+                current_div = soup.new_tag('div')
+            was_separator = True
             continue
         elif num_children == 1:
             child = children[0]
             if isinstance(child, NavigableString):
                 if child == '\xa0':
+                    if not was_separator:
+                        ps_filtered.append(current_div)
+                        current_div = soup.new_tag('div')
+                    was_separator = True
                     continue
-        ps_filtered.append(p)
+        current_div.append(p)
+        was_separator = False
 
     for para in ps_filtered:
         # Find all <img> tags within the <p> tag
