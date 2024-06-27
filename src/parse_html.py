@@ -20,8 +20,9 @@ def parse_html(html_content):
         # Find all <img> tags within the <p> tag
         images = para.find_all('img')
         for img in images:
-            # Update the src attribute to point to static/images directory
-            img['src'] = f"/static/{img['src']}"
+            if not str(img['src']).startswith('/static'):
+                # Update the src attribute to point to static/images directory
+                img['src'] = f"/static/{img['src']}"
 
     # Extract relevant information. For example, let's get all the links:
     # links = soup.find_all('a')
