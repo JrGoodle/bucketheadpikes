@@ -1,5 +1,6 @@
 import requests
 
+
 def fetch_html(url):
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
@@ -9,6 +10,7 @@ def fetch_html(url):
         return response.text
     else:
         raise Exception(f"Failed to fetch page. Status code: {response.status_code}")
+
 
 if __name__ == "__main__":
     url = "https://www.bucketheadpikes.com"
