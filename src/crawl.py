@@ -2,10 +2,14 @@ import os
 import requests
 from urllib.parse import urlparse, urljoin
 
+
 # Function to fetch a web page and return its content
 def fetch_page(url):
     try:
-        response = requests.get(url)
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+        }
+        response = requests.get(url, headers=headers)
         if response.status_code == 200:
             return response.content
         else:
@@ -13,6 +17,7 @@ def fetch_page(url):
     except requests.RequestException as e:
         print(f"Error fetching {url}: {e}")
     return None
+
 
 # Function to save content to a file
 def save_page(url, content, base_dir):
@@ -31,6 +36,7 @@ def save_page(url, content, base_dir):
     with open(full_path, 'wb') as f:
         f.write(content)
     print(f"Saved: {url} => {full_path}")
+
 
 # Function to crawl a website recursively
 def crawl_site(url, base_dir):
@@ -52,6 +58,7 @@ def crawl_site(url, base_dir):
 
     crawl(url)
 
+
 # Function to parse links from HTML content
 def parse_links(base_url, html_content):
     from bs4 import BeautifulSoup
@@ -61,6 +68,7 @@ def parse_links(base_url, html_content):
         absolute_url = urljoin(base_url, link['href'])
         links.add(absolute_url)
     return links
+
 
 if __name__ == "__main__":
     # Replace with your starting URL and base directory to save files
