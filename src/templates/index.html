@@ -5,12 +5,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buckethead Pikes Content</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#collapseBtn").click(function () {
+                $("div").toggle();
+            });
+        });
+    </script>
+    <style>
+        /* Optional: Style for the button */
+        #collapseBtn {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
     <h1>Buckethead Pikes Content</h1>
 
     <h2>Text Content</h2>
+    <button id="collapseBtn">Collapse/Expand All</button> <!-- Button to collapse/expand all divs -->
     <div>
         {% for text in texts %}
         <div>{{ text|safe }}</div>
