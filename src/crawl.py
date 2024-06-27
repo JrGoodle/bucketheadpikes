@@ -1,6 +1,6 @@
 import os
 import requests
-from urllib.parse import urlparse, urljoin
+from urllib.parse import urlparse, urljoin, urldefrag
 
 
 # Function to fetch a web page and return its content
@@ -21,11 +21,15 @@ def fetch_page(url):
 
 # Function to save content to a file
 def save_page(url, content, base_dir):
+    # if str(url).endswith('.'):
+    #     print()
     parsed_url = urlparse(url)
     path = parsed_url.path
     if path.endswith('/'):
         path += 'index.html'  # If URL ends with '/', save as index.html
     elif not path.endswith('.html'):
+        if path.endswith('.mp3') or path.endswith('.jpg'):
+            return
         path += '.html'  # Append .html if not already present
 
     # Create directory structure based on URL path
@@ -41,6 +45,11 @@ def save_page(url, content, base_dir):
 # Function to crawl a website recursively
 def crawl_site(url, base_dir):
     visited_urls = set()
+    original_domain = urlparse(url).netloc.lower()
+
+    def is_valid(url):
+        parsed_url = urlparse(url)
+        return parsed_url.netloc.lower() == original_domain
 
     def crawl(url):
         if url in visited_urls:
@@ -54,7 +63,8 @@ def crawl_site(url, base_dir):
             # Parse links and recursively crawl them
             links = parse_links(url, content)
             for link in links:
-                crawl(link)
+                if is_valid(link):
+                    crawl(link)
 
     crawl(url)
 
@@ -66,13 +76,15 @@ def parse_links(base_url, html_content):
     soup = BeautifulSoup(html_content, 'html.parser')
     for link in soup.find_all('a', href=True):
         absolute_url = urljoin(base_url, link['href'])
+        # Remove fragments to avoid duplicates (e.g., page#section)
+        absolute_url = urldefrag(absolute_url)[0]
         links.add(absolute_url)
     return links
 
 
 if __name__ == "__main__":
     # Replace with your starting URL and base directory to save files
-    start_url = "https://www.bucketheadpikes.com"
+    start_url = "http://www.bucketheadpikes.com/"
     save_directory = "website_pages"
 
     crawl_site(start_url, save_directory)
