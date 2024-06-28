@@ -1,8 +1,11 @@
 import bs4
 from bs4 import BeautifulSoup, NavigableString
 
+
 def parse_html(html_content):
     soup = BeautifulSoup(html_content, 'html.parser')
+    body = soup.find('body')
+    body_children = list(body.children)
     ps = soup.find_all('p')
     ps_filtered = []
     was_separator = False
