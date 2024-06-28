@@ -4,6 +4,8 @@ import shutil
 import requests
 from urllib.parse import urlparse, urljoin, urldefrag
 
+from constants import STATIC_CRAWL_DIR
+
 
 # Function to fetch a web page and return its content
 def fetch_page(url):
@@ -116,7 +118,7 @@ def parse_links(base_url, html_content):
 
 if __name__ == "__main__":
     # Replace with your starting URL and base directory to save files
-    start_url = "http://www.bucketheadpikes.com/"
-    save_directory = "static_site"
+    start_url = "https://www.bucketheadpikes.com/"
+    save_directory = STATIC_CRAWL_DIR
 
     crawl_site(start_url, save_directory)

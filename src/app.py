@@ -3,6 +3,9 @@ import parse_html
 
 app = Flask(__name__)
 
+# Set the destination directory for Frozen-Flask
+app.config['FREEZER_DESTINATION'] = 'path/to/your/static_site'
+
 
 @app.route('/')
 def home():
