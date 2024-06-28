@@ -45,10 +45,10 @@ def save_content(url, content, base_dir):
 
     # Copy static assets (images, CSS, JS) if applicable
     if full_path.endswith(('.html', '.htm')):
-        copy_static_assets(url, content, base_dir, os.path.dirname(full_path))
+        copy_static_assets(url, content, os.path.dirname(full_path))
 
 
-def copy_static_assets(base_url, html_content, base_dir, dest_dir):
+def copy_static_assets(base_url, html_content, dest_dir):
     from bs4 import BeautifulSoup
 
     soup = BeautifulSoup(html_content, 'html.parser')
@@ -64,7 +64,6 @@ def copy_static_assets(base_url, html_content, base_dir, dest_dir):
             if response.status_code == 200:
                 parsed_path = urlparse(url).path
                 parsed_path = parsed_path.removeprefix('/')
-                # temp_path = os.path.basename(parse_url)
                 file_path = os.path.join(dest_dir, parsed_path)
                 os.makedirs(os.path.dirname(file_path), exist_ok=True)
                 with open(file_path, 'wb') as f:
