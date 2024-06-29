@@ -6,7 +6,4 @@ cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
 . 'script/utils.sh'
 . 'script/import_python.sh'
 
-pushd src
-
-pipenv run python fetch_html.py
-pipenv run python crawl.py
+pipenv run python src/fetch_html.py

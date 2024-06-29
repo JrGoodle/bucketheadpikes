@@ -20,7 +20,8 @@ def home():
     rendered_template = render_template('index.html', texts=indexed_data)
 
     generated_index_html = BUILD_DIR / 'index.html'
-    with open(generated_index_html, "w", encoding="utf-8") as file:
+    generated_index_html.touch()
+    with generated_index_html.open("w", encoding="utf-8") as file:
         file.write(rendered_template)
     print("HTML content rendered and saved to index.html")
 
