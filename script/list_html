@@ -6,4 +6,5 @@ cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
 . 'script/utils.sh'
 . 'script/import_python.sh'
 
-ls static_site/*.html > html_pages.txt
+pushd 'static_site/www.bucketheadpikes.com'
+ls *.html > ../../html_pages.txt
