@@ -1,0 +1,2 @@
+shows.html
+solo_shows.html

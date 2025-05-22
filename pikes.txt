@@ -22,6 +22,8 @@
 30_Mannequin_Cemetery.html
 31_Pearsons_Square.html
 365_days_in_the_pumpkin_patch.html
+eighteen.html
+fifteen.html
 pike_100.html
 pike_101.html
 pike_102.html
@@ -646,3 +648,8 @@ pike_96.html
 pike_97.html
 pike_98.html
 pike_99.html
+twelve.html
+twenty.html
+twentyone.html
+twentythree.html
+twentytwo.html
