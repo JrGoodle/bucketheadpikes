@@ -192,10 +192,15 @@ def scrape_website(start_url, download_folder="scraped_site_output"):
 if __name__ == "__main__":
     # Get site and folder from user or use defaults
     default_site = "https://www.bucketheadpikes.com"
-    site_to_scrape = input(f"Enter the full URL of the site to scrape (default: {default_site}): ") or default_site
+    # Try to get from environment variables first
+    site_to_scrape = os.environ.get("SCRAPE_URL") or input(f"Enter the full URL of the site to scrape (default: {default_site}): ") or default_site
 
-    default_folder_name = urlparse(site_to_scrape).netloc.replace('.', '_') + "_scraped"
-    output_directory = input(f"Enter the name for the download folder (default: {default_folder_name}): ") or default_folder_name
+    default_folder_name_base = urlparse(site_to_scrape).netloc.replace('.', '_')
+    if not default_folder_name_base: # Handle cases where URL parsing might fail or netloc is empty
+        default_folder_name_base = "default_site"
+    default_folder_name = default_folder_name_base + "_scraped"
+
+    output_directory = os.environ.get("OUTPUT_DIR") or input(f"Enter the name for the download folder (default: {default_folder_name}): ") or default_folder_name
 
     print(f"Starting scrape for: {site_to_scrape}")
     print(f"Content will be saved to: {output_directory}")

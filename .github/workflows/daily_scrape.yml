@@ -1,0 +1,35 @@
+name: Daily Pike Scraper
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs daily at midnight UTC
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  scrape_and_archive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+
+      - name: Install pipenv
+        run: pip install pipenv
+
+      - name: Install dependencies
+        run: pipenv install --system --deploy --ignore-pipfile # Installs to system Python, ignores Pipfile.lock changes
+
+      - name: Run Pike Scraper
+        env:
+          SCRAPE_URL: "https://www.bucketheadpikes.com"
+          OUTPUT_DIR: "bucketheadpikes_scraped_output"
+        run: python pike_scraper.py
+
+      - name: Archive scraped files
+        uses: actions/upload-artifact@v4
+        with:
+          name: bucketheadpikes-scrape-archive
+          path: bucketheadpikes_scraped_output/
+          if-no-files-found: error # Optional: fail if the output directory is empty
