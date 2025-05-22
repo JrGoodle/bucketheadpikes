@@ -33,3 +33,10 @@ jobs:
           name: bucketheadpikes-scrape-archive
           path: bucketheadpikes_scraped_output/
           if-no-files-found: error # Optional: fail if the output directory is empty
+
+      - name: Archive scraper logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: scraper-logs-archive
+          path: scraper_logs/
+          if-no-files-found: warn # Optional: warn if the log directory is empty or not found

@@ -4,11 +4,62 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 import time
 import mimetypes
+import datetime # Added for timestamping
+
+LOG_BASE_DIR = "scraper_logs" # Directory for all log files
+SUCCESS_LOG_FILE = "successful_downloads.log"
+FAILED_LOG_FILE = "failed_downloads.log"
+
+# Global path variables for logs, to be initialized by setup_log_paths()
+_SUCCESS_LOG_PATH = None
+_FAILED_LOG_PATH = None
 
 # Global set to keep track of URLs that have been processed (queued, downloaded, or failed)
 # This prevents redundant downloads and crawling loops.
 PROCESSED_URLS = set()
 DOWNLOADED_FILES_LOG = set() # To log actual file paths saved
+
+def setup_log_paths():
+    """Creates the log directory and sets global paths for log files."""
+    global _SUCCESS_LOG_PATH, _FAILED_LOG_PATH
+
+    # LOG_BASE_DIR will be created relative to the script's current working directory.
+    # In GitHub Actions, this is typically the repository root.
+    log_dir_path = LOG_BASE_DIR
+    if not os.path.exists(log_dir_path):
+        try:
+            os.makedirs(log_dir_path, exist_ok=True)
+            print(f"Created log directory: {os.path.abspath(log_dir_path)}")
+        except OSError as e:
+            print(f"Error creating log directory {log_dir_path}: {e}")
+            # If directory creation fails, log paths will remain None, and logging will be skipped.
+            return
+
+    _SUCCESS_LOG_PATH = os.path.join(log_dir_path, SUCCESS_LOG_FILE)
+    _FAILED_LOG_PATH = os.path.join(log_dir_path, FAILED_LOG_FILE)
+    print(f"Success logs will be saved to: {os.path.abspath(_SUCCESS_LOG_PATH)}")
+    print(f"Failed logs will be saved to: {os.path.abspath(_FAILED_LOG_PATH)}")
+
+def log_message(log_type, message):
+    """Appends a timestamped message to the appropriate log file (success or failed)."""
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    log_file_to_use = None
+    if log_type == "success":
+        log_file_to_use = _SUCCESS_LOG_PATH
+    elif log_type == "failed":
+        log_file_to_use = _FAILED_LOG_PATH
+
+    if not log_file_to_use:
+        # This might happen if setup_log_paths() failed to create the directory
+        # print(f"Warning: Log path for type '{log_type}' not configured. Message: {message}")
+        return
+
+    try:
+        with open(log_file_to_use, 'a', encoding='utf-8') as f:
+            f.write(f"{timestamp} - {message}\n")
+    except IOError as e:
+        print(f"Error writing to log file {log_file_to_use}: {e}")
 
 def ensure_dir_for_file(file_path):
     """Ensures the directory for a given file_path exists."""
@@ -26,6 +77,8 @@ def scrape_website(start_url, download_folder="scraped_site_output"):
     Scrapes a website starting from start_url, downloading HTML pages and media resources
     from the same domain into the download_folder.
     """
+    setup_log_paths() # Initialize log directory and paths
+
     if not os.path.exists(download_folder):
         try:
             os.makedirs(download_folder)
@@ -123,6 +176,7 @@ def scrape_website(start_url, download_folder="scraped_site_output"):
                         downloaded_content_for_parsing = html_content_bytes
                 DOWNLOADED_FILES_LOG.add(local_save_path)
                 print(f"Saved {current_url} to {local_save_path}")
+                log_message("success", f"SUCCESS: {current_url} -> {local_save_path}")
 
 
             if is_html and downloaded_content_for_parsing:
@@ -180,8 +234,10 @@ def scrape_website(start_url, download_folder="scraped_site_output"):
 
         except requests.RequestException as e:
             print(f"Failed to process {current_url}: {e}")
+            log_message("failed", f"FAILED (RequestException): {current_url} - Error: {e}")
         except Exception as e: # Catch any other unexpected errors during processing a URL
             print(f"An unexpected error occurred while processing {current_url}: {e}")
+            log_message("failed", f"FAILED (Exception): {current_url} - Error: {e}")
 
         time.sleep(0.25) # Politeness delay
 
