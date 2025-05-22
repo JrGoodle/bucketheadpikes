@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-# shellcheck disable=SC1091
-
-set -euo pipefail
-cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
-. 'script/utils.sh'
-. 'script/import_python.sh'
-
-pipenv run python src/freeze.py
